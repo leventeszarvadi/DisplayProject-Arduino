@@ -1,0 +1,25 @@
+#######################################
+# Syntax Coloring Map For LCDClass
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+LCDClass	KEYWORD1	LCDClass
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+init	KEYWORD2
+xButtonPushed KEYWORD2
+nextButtonPushed	KEYWORD2
+backButtonPushed	KEYWORD2
+settingsButtonPushed	KEYWORD2
+OKButtonPushed	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
