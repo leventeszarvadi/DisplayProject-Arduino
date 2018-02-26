@@ -1,5 +1,6 @@
 #include <LCDClass.h>
 #include <IRremote.h>
+#include <VirtualWire.h>
 
 
 int RECV_PIN = 9;
@@ -8,7 +9,7 @@ decode_results res;
 
 const long callAcceptButton=16753245;
 const long phoneButton=16736925;
-const long callDeclineButton=16799565;
+const long callDeclineButton=16769565;
 const long chMinusButton=16720605;
 const long chPlusButton=1671245;
 const long eqButton=16761405;
@@ -27,7 +28,12 @@ const long Button6=16734885;
 const long Button7=16728765;
 const long Button8=16730805;
 const long Button9=16732845;
+
 const int redLed=7;
+const int displaysRefreshTime=6000;
+unsigned long previousMillis = 0;
+ 
+
 LCD lcd(6,11,5,4,3,2);
 
 void setup()
@@ -36,21 +42,21 @@ void setup()
   lcd.init();
   pinMode(redLed,OUTPUT);
   irrecv.enableIRIn(); // Start the receiver
+
+  vw_set_rx_pin(13);
+  vw_set_tx_pin(12);
+  vw_setup(4000);// speed of data transfer Kbps
 }
 long number=0;
 void loop() {
   if (irrecv.decode(&res)) {
     
     long results=res.value;
+    Serial.println(results,HEX);
     if (results>0)
     {
-        digitalWrite(redLed,HIGH);
-       // if ((results==blocked) || (results==blocked+shiftNumber))
-       // {
-         // lcd.blockedButtonPushed();//not impelemented yet
-          //transmitter always checks if display blocked, if blocked, sends an empty message and blocks it
-       // }
-
+        bool correctSignal=true;
+        
         switch(results)
         {
           case plusButton:
@@ -69,7 +75,7 @@ void loop() {
             lcd.OKButtonPushed();
             break;
           case eqButton:
-            lcd.adminButtonPushed();
+            lcd.displayBlockButtonPushed();
             break;
           case Button0:
             lcd.xButtonPushed(0);
@@ -101,19 +107,73 @@ void loop() {
           case Button9:
             lcd.xButtonPushed(9);
             break;
+          case callAcceptButton:
+            lcd.letterButtonPushed('A');
+            break;
+          case phoneButton:
+            lcd.letterButtonPushed('B');
+            break;
+          case callDeclineButton:
+            lcd.letterButtonPushed('C');
+            break;
           default:
+            correctSignal=false;
             break;
         }
-
-       
-        delay(300);
-        digitalWrite(redLed,LOW);
-    
-        Serial.println(results);
+        /*if(correctSignal)
+        {
+          digitalWrite(redLed,HIGH);
+        }
+        delay(50);
+        digitalWrite(redLed,LOW);*/
     }
     irrecv.resume(); // Receive the next value
   }
-  delay(100);
+  unsigned long currentMillis = millis();
+  if(currentMillis - previousMillis > displaysRefreshTime)
+  {
+    previousMillis = currentMillis;  
+    char *message;
+    String mes;
+    Song actualSong=lcd.getActualSong();
+    if (lcd.isDisplayBlocked()|| !actualSong.itWasSetUp)
+    {
+      mes=String("G////");
+    }
+    else
+    {
+      mes="G";
+      if (actualSong.number!=0)
+      {
+        mes+=String(actualSong.number);
+      }
+      mes+="/";
+      if (actualSong.version!='_')
+      {
+        mes+=String(actualSong.version);
+      }
+      mes+="/";
+      if (actualSong.startVerse!=0)
+      {
+        mes+=String(actualSong.startVerse);
+      }
+      mes+="/";
+       if (actualSong.endVerse!=0)
+      {
+        mes+=String(actualSong.endVerse);
+      }
+       mes+="/";
+    }
+    message=mes.c_str();
+   // Serial.println(message);
+    vw_send((uint8_t *)message, strlen(message));
+    
+  }
+  else
+  {
+    delay(100);
+  }
+  
 }
 
 
