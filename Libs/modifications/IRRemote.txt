@@ -1,0 +1,11 @@
+/----------IN IR FOLDER-----------------
+
+1. https://forum.arduino.cc/index.php?topic=454873.0
+boarddefs.h ->153 row
+	TIMER_2 -> TIMER_1
+
+
+-----------IN MANCHESTER FOLDER------------------------
+
+Manchester.cpp
+533 row ->TIMER2_COMPA_vect -> TIMER3_COMPA_vect

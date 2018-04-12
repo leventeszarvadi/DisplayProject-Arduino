@@ -1,4 +1,4 @@
-#include <DisplayClass.h> //this is my librarie, I added it to Arduino's Librarie
+#include <DisplayWithMultiplexingClass.h>
 #include <TimedAction.h>
 #include <VirtualWire.h>
 
@@ -28,9 +28,6 @@ int segmen[]={northSegment, northEastSegment, northWestSegment, middleSegment, s
 int address[]={bigAddress1,bigAddress2,bigAddress3,smallAddress1,smallAddress2,smallAddress3,smallAddress4};
 
 Display d(*&segmen,*&address, false); //create a class 
-
-
-
 
 void message() //verify sign 
   {
@@ -83,7 +80,8 @@ void message() //verify sign
   }
 }
 
-void use()//for timeaction
+void use()
+{//for timeaction
   d.displayNumbers();
 }
 
