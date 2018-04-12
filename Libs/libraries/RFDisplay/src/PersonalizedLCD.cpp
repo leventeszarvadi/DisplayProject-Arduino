@@ -469,69 +469,42 @@ int LCD::getActualSongPosition()
 
 void LCD::setSongList(LCDDisplaySong* list)
 {
+
 	for(int i=0; i<MAXSONG; ++i)
 	{
 		LCDDisplaySong song=list[i];
-		for(int i=0; i<8; i++)
+		if(song.mainNumber>0)
 		{
-			song.characterWasSetUp[i]=false;
-		}
-		if (song.mainNumber>99)
-		{
-			song.characterWasSetUp[0]=true;
-			song.characterWasSetUp[1]=true;
-			song.characterWasSetUp[2]=true;
-			song.itWasSetUp=true;
+			settingsButtonPushed();
+			xButtonPushed((int)song.mainNumber/100);
+			xButtonPushed((int)song.mainNumber/10%10);
+			xButtonPushed((int)song.mainNumber%10);
+			if (song.version=='_')
+				inSettingsNextButtonPushed();
+			else
+				letterButtonPushed(song.version);
+			if (song.startVerse>0)
+			{
+				xButtonPushed((int)song.startVerse/10);
+				xButtonPushed((int)song.startVerse%10);
+			}
+
+
+			if (song.endVerse>1)
+			{
+				xButtonPushed((int)song.endVerse/10);
+				xButtonPushed((int)song.endVerse%10);
+			}
+			
+			OKButtonPushed();
+			nextButtonPushed();
 		}
 		else
 		{
-			if (song.mainNumber>9)
-			{
-				song.characterWasSetUp[1]=true;
-				song.characterWasSetUp[2]=true;		
-				song.itWasSetUp=true;		
-			}
-			else
-			{
-				if(song.mainNumber>0)
-				{
-					song.characterWasSetUp[2]=true;
-					song.itWasSetUp=true;	
-				}
-			}
+			counter=0;
+			displayASong(counter);
+			return;	
 		}
-
-		if(song.itWasSetUp)
-		{
-			if (song.version!='_')
-				song.characterWasSetUp[3]=true;
-			
-			if (song.startVerse>9)
-			{
-				song.characterWasSetUp[4]=true;
-				song.characterWasSetUp[5]=true;
-			}
-			else
-			{
-				if (song.startVerse>0)
-					song.characterWasSetUp[5]=true;
-			}
-
-			if (song.endVerse>9)
-			{
-				song.characterWasSetUp[6]=true;
-				song.characterWasSetUp[7]=true;
-			}
-			else
-			{
-				if(song.endVerse>0)
-				{
-					song.characterWasSetUp[7]=true;
-				}
-			}
-		}
-
-		songList[i]=song;		
 	}
 }
 
