@@ -159,8 +159,6 @@ void LCD::displayASong(int songNumber)
 {
 	actualSongNumber=songNumber;
 	actualSong=songList[songNumber];
-	Serial.println(".................................");
-	Serial.println(actualSong.mainNumber);
 
 	lcd->clear();
 	refreshDisplayStatus();
@@ -389,14 +387,14 @@ void LCD::OKButtonPushed()
 			lcd->setCursor(possiblePosition[inSettingActualPosition].column,possiblePosition[inSettingActualPosition].row);
 		}
 	}
-	//else
-	//{
-	//	if(inDeleteConfirmation)
-	//	{
-	//		deleteAllSong();
-	//		inDeleteConfirmation=false;
-	//	}
-	//}	
+	else
+	{
+		if(inDeleteConfirmation)
+		{
+			inDeleteConfirmation=false;
+			deleteAllSong();
+		}
+	}	
 }
 
 void LCD::xButtonPushed(int buttonNumber)
@@ -434,6 +432,14 @@ void LCD::cancelButtonPushed()
 		inSettings=false;
 		lcd->noBlink();
 		displayASong(actualSongNumber);
+	}
+	else
+	{
+		if(inDeleteConfirmation)
+		{
+			inDeleteConfirmation=false;
+			displayASong(counter);
+		}
 	}	
 }
 
@@ -544,7 +550,6 @@ void LCD::clearAllSongs()
 
 bool LCD::savingDatasMessage()
 {
-	Serial.println("Here");
 	if(!inSettings)
 	{
 		lcd->noBlink();
