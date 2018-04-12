@@ -54,8 +54,8 @@ LCD lcd(6,11,5,4,3,2);
 
 void setup()
 {
-  Serial.begin(9600);
-  Serial.println("Start");
+  //Serial.begin(9600);
+  //Serial.println("Start");
   rfHandler=new VWRFHandler(songDataConverter,13,12,2000);
   pinMode(redLed,OUTPUT);
   pinMode(blockLedOnBoard,OUTPUT);
@@ -83,7 +83,7 @@ void loop() {
   {
     long results=res.value;
     bool correctSignal=true;
-   // Serial.println(results);
+   // //Serial.println(results);
     switch(results)
     {
       case plusButton:
@@ -164,7 +164,7 @@ void loop() {
     
     irrecv.resume();
   }
-  /*else
+  else
   {
   
     //if not with remote controller
@@ -174,21 +174,21 @@ void loop() {
     
     if (nextButtonStateOnBoard && !previousNextButtonStateOnBoard)
     {
-      Serial.println("NEXT");
+      //Serial.println("NEXT");
         lcd.nextButtonPushed();
     }
     previousNextButtonStateOnBoard=nextButtonStateOnBoard;
 
     if (backButtonStateOnBoard && !previousBackButtonStateOnBoard)
     {
-       Serial.println("BACK");
+       //Serial.println("BACK");
         lcd.backButtonPushed();
     }
     previousBackButtonStateOnBoard=backButtonStateOnBoard;
 
     if (blockButtonStateOnBoard && !previousBlockButtonStateOnBoard)
     {
-       Serial.println("BLOCK");
+       //Serial.println("BLOCK");
         lcd.displayBlockButtonPushed();
         if (lcd.isDisplayBlocked())
         {
@@ -201,7 +201,7 @@ void loop() {
     }
     previousBlockButtonStateOnBoard=blockButtonStateOnBoard;  
    
-  }*/
+  }
   unsigned long currentMillis = millis();
 
   if(currentMillis - previousMillis > displaysRefreshTime)
@@ -243,19 +243,23 @@ bool buttonPushedOnBoard(int buttonPin)
 
 void loadingDatasFromLocalStorage()
 {
-  
   eepromAddress=0;
   int songListSize=lcd.getMaxSongNumber();
   LCDDisplaySong songList[songListSize];
   for (int i=0; i<songListSize; i++)
   {
     songList[i]=getNextSongFromLocalStorage();
+    //Serial.print("______________");
+    //Serial.print(i);
+    //Serial.println("______________");
+    //Serial.println(songList[i].mainNumber);
+    //Serial.println((int)songList[i].version);
+    //Serial.println(songList[i].startVerse);
+    //Serial.println(songList[i].endVerse);
+    //Serial.println("_______________________________");
+    
   }
   lcd.setSongList(songList);
-//  int pos=EEPROM.read(eepromAddress++);
-  //Serial.print("POSITION :");
- // Serial.println(pos);
-  //lcd.setActualPosition(pos);
   eepromAddress=0;
 }
 
@@ -274,16 +278,27 @@ void saveSongListInLocalStorage(LCDDisplaySong* list)
   eepromClear();
   eepromAddress=0;
   int songListSize=lcd.getMaxSongNumber();
+  //Serial.println(">>>>>>>>>>>>>Most mentem az adatokat!<<<<<<<<<<<<<<<<");
   for (int i=0; i<songListSize; i++)
   {
-    Serial.println("Mentem");
+    //Serial.println("++++++++++++++++++++++++++");
+    //Serial.print(i);
+    //Serial.println(". adat mentese:");
     saveSongInLocalStorage(list[i]);
+    //Serial.println("++++++++++++++++++++++++++");
   }
   //EEPROM.write(eepromAddress++, (byte)(lcd.getActualSongPosition()));
   eepromAddress=0;
 }
 void saveSongInLocalStorage(LCDDisplaySong song)
 {
+
+  //Serial.println((byte)song.mainNumber);
+  //Serial.println((byte)song.version);
+  //Serial.println((byte)song.startVerse);
+  //Serial.println((byte)song.endVerse);
+
+  
   EEPROM.write(eepromAddress++, (byte)(song.mainNumber/100));
   EEPROM.write(eepromAddress++, ((byte)(song.mainNumber/10))%10);
   EEPROM.write(eepromAddress++, (byte)(song.mainNumber%10));
