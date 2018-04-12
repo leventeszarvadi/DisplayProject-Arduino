@@ -164,7 +164,7 @@ void loop() {
     
     irrecv.resume();
   }
-  /*else
+  else
   {
   
     //if not with remote controller
@@ -174,21 +174,18 @@ void loop() {
     
     if (nextButtonStateOnBoard && !previousNextButtonStateOnBoard)
     {
-      Serial.println("NEXT");
         lcd.nextButtonPushed();
     }
     previousNextButtonStateOnBoard=nextButtonStateOnBoard;
 
     if (backButtonStateOnBoard && !previousBackButtonStateOnBoard)
     {
-       Serial.println("BACK");
         lcd.backButtonPushed();
     }
     previousBackButtonStateOnBoard=backButtonStateOnBoard;
 
     if (blockButtonStateOnBoard && !previousBlockButtonStateOnBoard)
     {
-       Serial.println("BLOCK");
         lcd.displayBlockButtonPushed();
         if (lcd.isDisplayBlocked())
         {
@@ -201,7 +198,7 @@ void loop() {
     }
     previousBlockButtonStateOnBoard=blockButtonStateOnBoard;  
    
-  }*/
+  }
   unsigned long currentMillis = millis();
 
   if(currentMillis - previousMillis > displaysRefreshTime)
@@ -243,7 +240,6 @@ bool buttonPushedOnBoard(int buttonPin)
 
 void loadingDatasFromLocalStorage()
 {
-  
   eepromAddress=0;
   int songListSize=lcd.getMaxSongNumber();
   LCDDisplaySong songList[songListSize];
@@ -252,10 +248,6 @@ void loadingDatasFromLocalStorage()
     songList[i]=getNextSongFromLocalStorage();
   }
   lcd.setSongList(songList);
-//  int pos=EEPROM.read(eepromAddress++);
-  //Serial.print("POSITION :");
- // Serial.println(pos);
-  //lcd.setActualPosition(pos);
   eepromAddress=0;
 }
 
@@ -276,7 +268,6 @@ void saveSongListInLocalStorage(LCDDisplaySong* list)
   int songListSize=lcd.getMaxSongNumber();
   for (int i=0; i<songListSize; i++)
   {
-    Serial.println("Mentem");
     saveSongInLocalStorage(list[i]);
   }
   //EEPROM.write(eepromAddress++, (byte)(lcd.getActualSongPosition()));
