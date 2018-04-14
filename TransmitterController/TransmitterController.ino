@@ -67,7 +67,21 @@ void setup()
   loadingDatasFromLocalStorage();
   lcd.init();
 
+ /* if (lcd.isDisplayBlocked())
+  {
+     digitalWrite(blockLedOnBoard,LOW);
+  }
+  else
+  {
+     digitalWrite(blockLedOnBoard,HIGH);
+  }*/
+ 
+  irrecv.enableIRIn(); 
+}
+void loop() {
+
   if (lcd.isDisplayBlocked())
+  //blinking ???????
   {
      digitalWrite(blockLedOnBoard,LOW);
   }
@@ -75,10 +89,7 @@ void setup()
   {
      digitalWrite(blockLedOnBoard,HIGH);
   }
- 
-  irrecv.enableIRIn(); 
-}
-void loop() {
+  
   if(irrecv.decode(&res)) 
   {
     long results=res.value;
@@ -102,9 +113,18 @@ void loop() {
         lcd.OKButtonPushed();
         break;
       case eqButton:
-        digitalWrite(blockLedOnBoard,!lcd.isDisplayBlocked());
-        lcd.displayBlockButtonPushed();
-        break;
+        {
+          lcd.displayBlockButtonPushed();
+        /*  if (lcd.isDisplayBlocked())
+          {
+             digitalWrite(blockLedOnBoard,LOW);
+          }
+          else
+          {
+             digitalWrite(blockLedOnBoard,HIGH);
+          }*/
+          break;
+        }
       case Button0:
         lcd.xButtonPushed(0);
         break;
@@ -187,7 +207,7 @@ void loop() {
     if (blockButtonStateOnBoard && !previousBlockButtonStateOnBoard)
     {
         lcd.displayBlockButtonPushed();
-        if (lcd.isDisplayBlocked())
+    /*    if (lcd.isDisplayBlocked())
         {
            digitalWrite(blockLedOnBoard,LOW);
         }
@@ -195,6 +215,7 @@ void loop() {
         {
            digitalWrite(blockLedOnBoard,HIGH);
         }
+        */
     }
     previousBlockButtonStateOnBoard=blockButtonStateOnBoard;  
    
