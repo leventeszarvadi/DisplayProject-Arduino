@@ -6,7 +6,7 @@
 #include "LiquidCrystal.h"
 #include "./utility/Models/LCDDisplaySong.h"
 
-const int MAXSONG=15; //
+const int MAXSONG=30; //
 
 struct Position{
 	int column;
